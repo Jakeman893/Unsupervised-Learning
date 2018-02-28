@@ -1,45 +1,11 @@
 __author__ = 'm.bashari'
 import numpy as np
 from sklearn import datasets, linear_model
-import matplotlib.pyplot as plt
-
 
 class Config:
-    nn_input_dim = 2  # input layer dimensionality
-    nn_output_dim = 2  # output layer dimensionality
     # Gradient descent parameters (I picked these by hand)
     epsilon = 0.01  # learning rate for gradient descent
     reg_lambda = 0.01  # regularization strength
-
-
-def generate_data():
-    np.random.seed(0)
-    X, y = datasets.make_moons(200, noise=0.20)
-    return X, y
-
-
-def visualize(X, y, model):
-    # plt.scatter(X[:, 0], X[:, 1], s=40, c=y, cmap=plt.cm.Spectral)
-    # plt.show()
-    plot_decision_boundary(lambda x:predict(model,x), X, y)
-    plt.title("Logistic Regression")
-
-
-def plot_decision_boundary(pred_func, X, y):
-    # Set min and max values and give it some padding
-    x_min, x_max = X[:, 0].min() - .5, X[:, 0].max() + .5
-    y_min, y_max = X[:, 1].min() - .5, X[:, 1].max() + .5
-    h = 0.01
-    # Generate a grid of points with distance h between them
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
-    # Predict the function value for the whole gid
-    Z = pred_func(np.c_[xx.ravel(), yy.ravel()])
-    Z = Z.reshape(xx.shape)
-    # Plot the contour and training examples
-    plt.contourf(xx, yy, Z, cmap=plt.cm.Spectral)
-    plt.scatter(X[:, 0], X[:, 1], c=y, cmap=plt.cm.Spectral)
-    plt.show()
-
 
 # Helper function to evaluate the total loss on the dataset
 def calculate_loss(model, X, y):
@@ -55,7 +21,7 @@ def calculate_loss(model, X, y):
     corect_logprobs = -np.log(probs[range(num_examples), y])
     data_loss = np.sum(corect_logprobs)
     # Add regulatization term to loss (optional)
-    data_loss += Config.reg_lambda / 2 * (np.sum(np.square(W1)) + np.sum(np.square(W2)))
+    # data_loss += Config.reg_lambda / 2 * (np.sum(np.square(W1)) + np.sum(np.square(W2)))
     return 1. / num_examples * data_loss
 
 
@@ -94,12 +60,15 @@ def backpropagate(a1, X, y, probs, num_examples, W1, W2, b1, b2):
 # - print_loss: If True, print the loss every 1000 iterations
 def build_model(X, y, nn_hdim, num_passes=20000, print_loss=False):
     # Initialize the parameters to random values. We need to learn these.
+    # Get the input dimensionality
+    nn_input_dim = X.shape[1]
+    # Get the number of unique outputs, not for regression
+    nn_output_dim = np.unique(y).shape[0]
     num_examples = len(X)
-    np.random.seed(0)
-    W1 = np.random.randn(Config.nn_input_dim, nn_hdim) / np.sqrt(Config.nn_input_dim)
+    W1 = np.random.randn(nn_input_dim, nn_hdim) / np.sqrt(nn_input_dim)
     b1 = np.zeros((1, nn_hdim))
-    W2 = np.random.randn(nn_hdim, Config.nn_output_dim) / np.sqrt(nn_hdim)
-    b2 = np.zeros((1, Config.nn_output_dim))
+    W2 = np.random.randn(nn_hdim, nn_output_dim) / np.sqrt(nn_hdim)
+    b2 = np.zeros((1, nn_output_dim))
 
     # This is what we return at the end
     model = {}
@@ -126,21 +95,3 @@ def build_model(X, y, nn_hdim, num_passes=20000, print_loss=False):
             print("Loss after iteration %i: %f" % (i, calculate_loss(model, X, y)))
 
     return model
-
-
-def classify(X, y):
-    # clf = linear_model.LogisticRegressionCV()
-    # clf.fit(X, y)
-    # return clf
-
-    pass
-
-
-def main():
-    X, y = generate_data()
-    model = build_model(X, y, 3, print_loss=True)
-    visualize(X, y, model)
-
-
-if __name__ == "__main__":
-    main()
