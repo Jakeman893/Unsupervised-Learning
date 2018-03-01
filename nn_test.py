@@ -139,8 +139,20 @@ class Boundary_Visualization_Test(unittest.TestCase):
         model = build_model(X, y, 3)
         visualize(X, y, lambda x:predict(model,x))
 
+from optimization_algs import hill_climbing_step
+
+class Hill_Climbing_Tests(unittest.TestCase):
+    def test_hill_climbing_step(self):
+        arr = range(0,10)
+        eval_funct = lambda x: arr[int(round(abs(x)))]
+        pos, score = hill_climbing_step(eval_funct, 0, 2)
+        self.assertEquals(score, 2)
+        self.assertEquals(abs(pos), 2.4)
+
 if __name__ == '__main__':
     # backprop_test = unittest.TestLoader().loadTestsFromTestCase(NN_Backprop_Test)
     # unittest.TextTestRunner(verbosity=1).run(backprop_test)
-    b_visualization_test = unittest.TestLoader().loadTestsFromTestCase(Boundary_Visualization_Test)
-    unittest.TextTestRunner(verbosity=1).run(b_visualization_test)
+    # b_visualization_test = unittest.TestLoader().loadTestsFromTestCase(Boundary_Visualization_Test)
+    # unittest.TextTestRunner(verbosity=1).run(b_visualization_test)
+    hill_climbing_test = unittest.TestLoader().loadTestsFromTestCase(Hill_Climbing_Tests)
+    unittest.TextTestRunner(verbosity=1).run(hill_climbing_test)

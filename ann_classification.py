@@ -95,24 +95,4 @@ def build_model(X, y, nn_hdim, num_passes=20000, print_loss=False):
             print("Loss after iteration %i: %f" % (i, calculate_loss(model, X, y)))
 
     return model
-
-
-# TODO: Implement randomized hill climbing
-def randomized_hill_climbing():
-    pass
-
-# TODO: Implement simulated annealing
-def simulated_annealing():
-    pass
-
-# TODO: Implement genetic algorithm
-def genetic():
-    pass
-
-# TODO: Implement MIMIC
-def MIMIC():
-    pass
-
-# TODO: Implement fitness function
-def fitness():
-    pass
+    
