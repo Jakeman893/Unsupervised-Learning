@@ -46,7 +46,8 @@ def enumerate_strings(df):
     return column_enums
 
 # Normalizes given X and returns a new X
-def normalize_columns(X):
+def normalize_data(df, target):
     scaler = preprocessing.StandardScaler()
-    scaler.fit(X)
-    return scaler.transform(X)
+    scaler.fit(df.loc[:, df.columns != target])
+    df.loc[:,df.columns != target] = scaler.transform(df.loc[:,df.columns != target])
+    return df
