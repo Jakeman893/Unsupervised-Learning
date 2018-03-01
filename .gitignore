@@ -2,3 +2,4 @@ venv/
 .ipynb_*/
 .xml
 *.pyc
+.coverage

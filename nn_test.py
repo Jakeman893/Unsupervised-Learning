@@ -150,9 +150,9 @@ class Hill_Climbing_Tests(unittest.TestCase):
         self.assertEquals(abs(pos), 2.4)
 
 if __name__ == '__main__':
-    # backprop_test = unittest.TestLoader().loadTestsFromTestCase(NN_Backprop_Test)
-    # unittest.TextTestRunner(verbosity=1).run(backprop_test)
-    # b_visualization_test = unittest.TestLoader().loadTestsFromTestCase(Boundary_Visualization_Test)
-    # unittest.TextTestRunner(verbosity=1).run(b_visualization_test)
+    backprop_test = unittest.TestLoader().loadTestsFromTestCase(NN_Backprop_Test)
+    unittest.TextTestRunner(verbosity=1).run(backprop_test)
+    b_visualization_test = unittest.TestLoader().loadTestsFromTestCase(Boundary_Visualization_Test)
+    unittest.TextTestRunner(verbosity=1).run(b_visualization_test)
     hill_climbing_test = unittest.TestLoader().loadTestsFromTestCase(Hill_Climbing_Tests)
     unittest.TextTestRunner(verbosity=1).run(hill_climbing_test)
