@@ -38,7 +38,7 @@ def enumerate_strings(df):
     column_enums = {}
     for column in df.columns:
         # If the column is made up of strings convert
-        if pd.api.types.is_string_dtype(df[column]):
+        if not pd.api.types.is_numeric_dtype(df[column]):
             le = preprocessing.LabelEncoder()
             le.fit(df[column])
             df[column] = le.transform(df[column])

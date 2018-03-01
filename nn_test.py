@@ -2,7 +2,7 @@ import numpy as np
 from ann_classification import *
 import unittest
 from visualization import plot_scatterplot_matrix, visualize
-from data_utils import iris_data, moons_data, enumerate_strings, normalize_data
+from data_utils import *
 from sklearn.neural_network import MLPClassifier
 
 class NN_Backprop_Test(unittest.TestCase):
@@ -68,7 +68,7 @@ class Boundary_Visualization_Test(unittest.TestCase):
         clf.fit(X,y)
         visualize(X, y, lambda x: clf.predict(x))
 
-    def test_linear_classifier_iris(self):
+    def test_linear_classifier_iris_two(self):
         target = 'species'
         df = iris_data()
         mappings = enumerate_strings(df)
@@ -78,14 +78,15 @@ class Boundary_Visualization_Test(unittest.TestCase):
         clf.fit(X,y)
         visualize(X, y, lambda x: clf.predict(x))
 
-    # def test_sklearn_NN_classifier_moons(self):
-    #     target = 'label'
-    #     df = moons_data()
-    #     X = df.loc[:, df.columns != target].values
-    #     y = df[target].values
-    #     clf = MLPClassifier()
-    #     clf.fit(X,y)
-    #     visualize(X, y, lambda x: clf.predict(x))
+    def test_linear_classifier_iris_all(self):
+        target = 'species'
+        df = iris_data()
+        mappings = enumerate_strings(df)
+        X = df[['sepal_length', 'sepal_width']].values
+        y = df[target].values
+        clf = linear_model.LogisticRegressionCV()
+        clf.fit(X,y)
+        visualize(X, y, lambda x: clf.predict(x))
 
     def test_backprop_standard_moons(self):
         """
@@ -99,7 +100,7 @@ class Boundary_Visualization_Test(unittest.TestCase):
         model = build_model(X, y, 3)
         visualize(X, y, lambda x:predict(model,x))
 
-    def test_backprop_standard_iris_two_features(self):
+    def test_backprop_standard_iris_two_species(self):
         """
         Check iris data with backprop weight optimizer
         Iris has 2 features and binary classification outputs
@@ -112,7 +113,7 @@ class Boundary_Visualization_Test(unittest.TestCase):
         model = build_model(X, y, 3)
         visualize(X, y, lambda x:predict(model,x))
 
-    def test_backprop_standard_iris_all_features(self):
+    def test_backprop_standard_iris_all_species(self):
         """
         Check iris data with backprop weight optimizer
         Iris has 2 features and binary classification outputs
@@ -121,6 +122,19 @@ class Boundary_Visualization_Test(unittest.TestCase):
         df = normalize_data(iris_data(), target)
         mappings = enumerate_strings(df)
         X = df[['sepal_length', 'sepal_width']].values
+        y = df[target].values
+        model = build_model(X, y, 3)
+        visualize(X, y, lambda x:predict(model,x))
+
+    def test_backprop_standard_flights_months(self):
+        """
+        Check iris data with backprop weight optimizer
+        Iris has 2 features and binary classification outputs
+        """
+        target = 'month'
+        df = normalize_data(flights_data(), target)
+        mappings = enumerate_strings(df)
+        X = df.loc[:, df.columns != target].values
         y = df[target].values
         model = build_model(X, y, 3)
         visualize(X, y, lambda x:predict(model,x))

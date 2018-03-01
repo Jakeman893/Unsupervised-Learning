@@ -21,7 +21,7 @@ def calculate_loss(model, X, y):
     corect_logprobs = -np.log(probs[range(num_examples), y])
     data_loss = np.sum(corect_logprobs)
     # Add regulatization term to loss (optional)
-    # data_loss += Config.reg_lambda / 2 * (np.sum(np.square(W1)) + np.sum(np.square(W2)))
+    data_loss += Config.reg_lambda / 2 * (np.sum(np.square(W1)) + np.sum(np.square(W2)))
     return 1. / num_examples * data_loss
 
 
@@ -95,3 +95,24 @@ def build_model(X, y, nn_hdim, num_passes=20000, print_loss=False):
             print("Loss after iteration %i: %f" % (i, calculate_loss(model, X, y)))
 
     return model
+
+
+# TODO: Implement randomized hill climbing
+def randomized_hill_climbing():
+    pass
+
+# TODO: Implement simulated annealing
+def simulated_annealing():
+    pass
+
+# TODO: Implement genetic algorithm
+def genetic():
+    pass
+
+# TODO: Implement MIMIC
+def MIMIC():
+    pass
+
+# TODO: Implement fitness function
+def fitness():
+    pass
