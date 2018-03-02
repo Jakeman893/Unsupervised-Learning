@@ -5,6 +5,9 @@ from visualization import plot_scatterplot_matrix, visualize
 from data_utils import *
 from sklearn.neural_network import MLPClassifier
 
+def candidate_funct_numerical(bounds):
+    return np.random.uniform(bounds[0], bounds[1])    
+
 class NN_Backprop_Test(unittest.TestCase):
     def test_backprop_standard_moons(self):
         """
@@ -145,28 +148,28 @@ class Hill_Climbing_Tests(unittest.TestCase):
     def test_hill_climbing_step_pos_slope(self):
         arr = range(0,10)
         eval_funct = lambda x: arr[int(round(abs(x)))]
-        pos, score = hill_climbing_step(eval_funct, 0, 2, bounds = (0, 9))
+        pos, score = hill_climbing_step(eval_funct, candidate_funct_numerical, 0, 2, bounds = (0, 9))
         self.assertEquals(score, 2)
         self.assertAlmostEqual(round(pos), 2)
 
     def test_hill_climbing_step_neg_slope(self):
         arr = range(10,-1,-1)
         eval_funct = lambda x: arr[int(round(abs(x)))]
-        pos, score = hill_climbing_step(eval_funct, 0, 2, bounds = (0, 9))
+        pos, score = hill_climbing_step(eval_funct, candidate_funct_numerical, 0, 2, bounds = (0, 9))
         self.assertEquals(score, 10)
         self.assertEquals(pos, 0)
 
     def test_hill_climbing_pos_slope(self):
         arr = range(0,10)
         eval_funct = lambda x: arr[int(round(abs(x)))]
-        pos, score = hill_climbing(eval_funct, 0, epsilon=0.01, bounds = (0, 9))
+        pos, score = hill_climbing(eval_funct, candidate_funct_numerical, 0, epsilon=0.01, bounds = (0, 9))
         self.assertEquals(score, 9)
         self.assertAlmostEqual(round(pos), 9)
 
     def test_hill_climbing_neg_slope(self):
         arr = range(9, -1, -1)
         eval_funct = lambda x: arr[int(round(abs(x)))]
-        pos, score = hill_climbing(eval_funct, 9, epsilon=0.01, bounds = (0, 9))
+        pos, score = hill_climbing(eval_funct, candidate_funct_numerical, 9, epsilon=0.01, bounds = (0, 9))
         self.assertEquals(score, 9)
         self.assertAlmostEqual(round(pos), 0)
 
@@ -174,21 +177,21 @@ class Hill_Climbing_Tests(unittest.TestCase):
     def test_hill_climbing_mountain_from_left(self):
         arr = range(0,10) + range(10,-1,-1)
         eval_funct = lambda x: arr[int(round(abs(x)))]
-        pos, score = hill_climbing(eval_funct, 0, epsilon=0.01, bounds = (0, 20))
+        pos, score = hill_climbing(eval_funct, candidate_funct_numerical, 0, epsilon=0.01, bounds = (0, 20))
         self.assertEquals(score, 10)
         self.assertAlmostEqual(round(pos), 10)
 
     def test_hill_climbing_mountain_from_right(self):
         arr = range(0,10) + range(10,-1,-1)
         eval_funct = lambda x: arr[int(round(abs(x)))]
-        pos, score = hill_climbing(eval_funct, 0, epsilon=0.01, bounds = (0, 20))
+        pos, score = hill_climbing(eval_funct, candidate_funct_numerical, 0, epsilon=0.01, bounds = (0, 20))
         self.assertEquals(score, 10)
         self.assertAlmostEqual(round(pos), 10)
 
     def test_hill_climbing_left_peak_first(self):
         arr = range(0,10) + range(10,-1,-1) + range(1, 6)
         eval_funct = lambda x: arr[int(round(abs(x)))]
-        pos, score = hill_climbing(eval_funct, 20, epsilon=0.01, bounds = (0, 25))
+        pos, score = hill_climbing(eval_funct, candidate_funct_numerical, 20, epsilon=0.01, bounds = (0, 25))
         self.assertTrue(score == 10 or score == 5)
         self.assertTrue(round(pos) == 10 or round(pos) == 25)
 
@@ -198,14 +201,14 @@ class Random_Hill_Climbing_Tests(unittest.TestCase):
     def test_pos_slope(self):
         arr = range(0,10)
         eval_funct = lambda x: arr[int(round(abs(x)))]
-        pos, score = randomized_hill_climbing(eval_funct, 0, epsilon=0.01, bounds = (0, 9))
+        pos, score = randomized_hill_climbing(eval_funct, candidate_funct_numerical, 0, epsilon=0.01, bounds = (0, 9))
         self.assertEquals(score, 9)
         self.assertAlmostEqual(round(pos), 9)
 
     def test_slope(self):
         arr = range(9, -1, -1)
         eval_funct = lambda x: arr[int(round(abs(x)))]
-        pos, score = randomized_hill_climbing(eval_funct, 9, epsilon=0.01, bounds = (0, 9))
+        pos, score = randomized_hill_climbing(eval_funct, candidate_funct_numerical, 9, epsilon=0.01, bounds = (0, 9))
         self.assertEquals(score, 9)
         self.assertAlmostEqual(round(pos), 0)
 
@@ -213,28 +216,28 @@ class Random_Hill_Climbing_Tests(unittest.TestCase):
     def test_mountain_from_left(self):
         arr = range(0,10) + range(10,-1,-1)
         eval_funct = lambda x: arr[int(round(abs(x)))]
-        pos, score = randomized_hill_climbing(eval_funct, 0, epsilon=0.01, bounds = (0, 20))
+        pos, score = randomized_hill_climbing(eval_funct, candidate_funct_numerical, 0, epsilon=0.01, bounds = (0, 20))
         self.assertEquals(score, 10)
         self.assertAlmostEqual(round(pos), 10)
 
     def test_mountain_from_right(self):
         arr = range(0,10) + range(10,-1,-1)
         eval_funct = lambda x: arr[int(round(abs(x)))]
-        pos, score = randomized_hill_climbing(eval_funct, 0, epsilon=0.01, bounds = (0, 20))
+        pos, score = randomized_hill_climbing(eval_funct, candidate_funct_numerical, 0, epsilon=0.01, bounds = (0, 20))
         self.assertEquals(score, 10)
         self.assertAlmostEqual(round(pos), 10)
 
     def test_two_peaks(self):
         arr = range(0,10) + range(10,-1,-1) + range(1, 6)
         eval_funct = lambda x: arr[int(round(abs(x)))]
-        pos, score = randomized_hill_climbing(eval_funct, 20, epsilon=0.01, bounds = (0, 25))
+        pos, score = randomized_hill_climbing(eval_funct, candidate_funct_numerical, 20, epsilon=0.01, bounds = (0, 25))
         self.assertTrue(score == 10 or score == 5)
         self.assertTrue(round(pos) == 10 or round(pos) == 25)
 
     def test_two_peaks_high_prob_jump(self):
         arr = range(0,10) + range(10,-1,-1) + range(1, 6)
         eval_funct = lambda x: arr[int(round(abs(x)))]
-        pos, score = randomized_hill_climbing(eval_funct, 20, epsilon=0.01, prob_jump=0.75, bounds = (0, 25))
+        pos, score = randomized_hill_climbing(eval_funct, candidate_funct_numerical, 20, epsilon=0.01, prob_jump=0.75, bounds = (0, 25))
         self.assertTrue(score == 10 or score == 5)
         self.assertTrue(round(pos) == 10 or round(pos) == 25)
 
@@ -244,14 +247,14 @@ class Simulated_Annealing_Tests(unittest.TestCase):
     def test_pos_slope(self):
         arr = range(0,10)
         eval_funct = lambda x: arr[int(round(abs(x)))]
-        pos, score = simulated_annealing(eval_funct, 0, iters_per_decay=1, bounds = (0, 9))
+        pos, score = simulated_annealing(eval_funct, candidate_funct_numerical, 0, iters_per_decay=1, bounds = (0, 9))
         self.assertEquals(score, 9)
         self.assertAlmostEqual(round(pos), 9)
 
     def test_neg_slope(self):
         arr = range(9, -1, -1)
         eval_funct = lambda x: arr[int(round(abs(x)))]
-        pos, score = simulated_annealing(eval_funct, 9, iters_per_decay=1, bounds = (0, 9))
+        pos, score = simulated_annealing(eval_funct, candidate_funct_numerical, 9, iters_per_decay=1, bounds = (0, 9))
         self.assertEquals(score, 9)
         self.assertAlmostEqual(round(pos), 0)
 
@@ -259,21 +262,21 @@ class Simulated_Annealing_Tests(unittest.TestCase):
     def test_mountain_from_left(self):
         arr = range(0,10) + range(10,-1,-1)
         eval_funct = lambda x: arr[int(round(abs(x)))]
-        pos, score = simulated_annealing(eval_funct, 0, bounds = (0, 20))
+        pos, score = simulated_annealing(eval_funct, candidate_funct_numerical, 0, bounds = (0, 20))
         self.assertEquals(score, 10)
         self.assertAlmostEqual(round(pos), 10)
 
     def test_mountain_from_right(self):
         arr = range(0,10) + range(10,-1,-1)
         eval_funct = lambda x: arr[int(round(abs(x)))]
-        pos, score = simulated_annealing(eval_funct, 0, bounds = (0, 20))
+        pos, score = simulated_annealing(eval_funct, candidate_funct_numerical, 0, bounds = (0, 20))
         self.assertEquals(score, 10)
         self.assertEquals(round(pos), 10)
 
     def test_two_peaks(self):
         arr = range(0,10) + range(10,-1,-1) + range(1, 6)
         eval_funct = lambda x: arr[int(round(abs(x)))]
-        pos, score = simulated_annealing(eval_funct, 0, bounds = (0, 25))
+        pos, score = simulated_annealing(eval_funct, candidate_funct_numerical, 0, bounds = (0, 25))
         self.assertEquals(score, 10)
         self.assertEquals(round(pos), 10)
 
