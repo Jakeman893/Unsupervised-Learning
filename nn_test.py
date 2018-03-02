@@ -139,20 +139,111 @@ class Boundary_Visualization_Test(unittest.TestCase):
         model = build_model(X, y, 3)
         visualize(X, y, lambda x:predict(model,x))
 
-from optimization_algs import hill_climbing_step
+from optimization_algs import hill_climbing_step, hill_climbing
 
 class Hill_Climbing_Tests(unittest.TestCase):
-    def test_hill_climbing_step(self):
+    def test_hill_climbing_step_pos_slope(self):
         arr = range(0,10)
         eval_funct = lambda x: arr[int(round(abs(x)))]
-        pos, score = hill_climbing_step(eval_funct, 0, 2)
+        pos, score = hill_climbing_step(eval_funct, 0, 2, bounds = (0, 9))
         self.assertEquals(score, 2)
-        self.assertEquals(abs(pos), 2.4)
+        self.assertAlmostEqual(round(pos), 2)
+
+    def test_hill_climbing_step_neg_slope(self):
+        arr = range(10,-1,-1)
+        eval_funct = lambda x: arr[int(round(abs(x)))]
+        pos, score = hill_climbing_step(eval_funct, 0, 2, bounds = (0, 9))
+        self.assertEquals(score, 10)
+        self.assertEquals(pos, 0)
+
+    def test_hill_climbing_pos_slope(self):
+        arr = range(0,10)
+        eval_funct = lambda x: arr[int(round(abs(x)))]
+        pos, score = hill_climbing(eval_funct, 0, epsilon=0.01, bounds = (0, 9))
+        self.assertEquals(score, 9)
+        self.assertAlmostEqual(round(pos), 9)
+
+    def test_hill_climbing_neg_slope(self):
+        arr = range(9, -1, -1)
+        eval_funct = lambda x: arr[int(round(abs(x)))]
+        pos, score = hill_climbing(eval_funct, 9, epsilon=0.01, bounds = (0, 9))
+        self.assertEquals(score, 9)
+        self.assertAlmostEqual(round(pos), 0)
+
+    # Tests function of form /\, see if we can find peak
+    def test_hill_climbing_mountain_from_left(self):
+        arr = range(0,10) + range(10,-1,-1)
+        eval_funct = lambda x: arr[int(round(abs(x)))]
+        pos, score = hill_climbing(eval_funct, 0, epsilon=0.01, bounds = (0, 20))
+        self.assertEquals(score, 10)
+        self.assertAlmostEqual(round(pos), 10)
+
+    def test_hill_climbing_mountain_from_right(self):
+        arr = range(0,10) + range(10,-1,-1)
+        eval_funct = lambda x: arr[int(round(abs(x)))]
+        pos, score = hill_climbing(eval_funct, 0, epsilon=0.01, bounds = (0, 20))
+        self.assertEquals(score, 10)
+        self.assertAlmostEqual(round(pos), 10)
+
+    def test_hill_climbing_left_peak_first(self):
+        arr = range(0,10) + range(10,-1,-1) + range(1, 6)
+        eval_funct = lambda x: arr[int(round(abs(x)))]
+        pos, score = hill_climbing(eval_funct, 20, epsilon=0.01, bounds = (0, 25))
+        self.assertTrue(score == 10 or score == 5)
+        self.assertTrue(round(pos) == 10 or round(pos) == 25)
+
+from optimization_algs import randomized_hill_climbing
+
+class Random_Hill_Climbing_Tests(unittest.TestCase):
+    def test_pos_slope(self):
+        arr = range(0,10)
+        eval_funct = lambda x: arr[int(round(abs(x)))]
+        pos, score = randomized_hill_climbing(eval_funct, 0, epsilon=0.01, bounds = (0, 9))
+        self.assertEquals(score, 9)
+        self.assertAlmostEqual(round(pos), 9)
+
+    def test_slope(self):
+        arr = range(9, -1, -1)
+        eval_funct = lambda x: arr[int(round(abs(x)))]
+        pos, score = randomized_hill_climbing(eval_funct, 9, epsilon=0.01, bounds = (0, 9))
+        self.assertEquals(score, 9)
+        self.assertAlmostEqual(round(pos), 0)
+
+    # Tests function of form /\, see if we can find peak
+    def test_mountain_from_left(self):
+        arr = range(0,10) + range(10,-1,-1)
+        eval_funct = lambda x: arr[int(round(abs(x)))]
+        pos, score = randomized_hill_climbing(eval_funct, 0, epsilon=0.01, bounds = (0, 20))
+        self.assertEquals(score, 10)
+        self.assertAlmostEqual(round(pos), 10)
+
+    def test_mountain_from_right(self):
+        arr = range(0,10) + range(10,-1,-1)
+        eval_funct = lambda x: arr[int(round(abs(x)))]
+        pos, score = randomized_hill_climbing(eval_funct, 0, epsilon=0.01, bounds = (0, 20))
+        self.assertEquals(score, 10)
+        self.assertAlmostEqual(round(pos), 10)
+
+    def test_two_peaks(self):
+        arr = range(0,10) + range(10,-1,-1) + range(1, 6)
+        eval_funct = lambda x: arr[int(round(abs(x)))]
+        pos, score = randomized_hill_climbing(eval_funct, 20, epsilon=0.01, bounds = (0, 25))
+        self.assertTrue(score == 10 or score == 5)
+        self.assertTrue(round(pos) == 10 or round(pos) == 25)
+
+    def test_two_peaks_high_prob_jump(self):
+        arr = range(0,10) + range(10,-1,-1) + range(1, 6)
+        eval_funct = lambda x: arr[int(round(abs(x)))]
+        pos, score = randomized_hill_climbing(eval_funct, 20, epsilon=0.01, prob_jump=0.75, bounds = (0, 25))
+        self.assertTrue(score == 10 or score == 5)
+        self.assertTrue(round(pos) == 10 or round(pos) == 25)
 
 if __name__ == '__main__':
-    backprop_test = unittest.TestLoader().loadTestsFromTestCase(NN_Backprop_Test)
-    unittest.TextTestRunner(verbosity=1).run(backprop_test)
-    b_visualization_test = unittest.TestLoader().loadTestsFromTestCase(Boundary_Visualization_Test)
-    unittest.TextTestRunner(verbosity=1).run(b_visualization_test)
-    hill_climbing_test = unittest.TestLoader().loadTestsFromTestCase(Hill_Climbing_Tests)
-    unittest.TextTestRunner(verbosity=1).run(hill_climbing_test)
+    # backprop_test = unittest.TestLoader().loadTestsFromTestCase(NN_Backprop_Test)
+    # unittest.TextTestRunner(verbosity=1).run(backprop_test)
+    # b_visualization_test = unittest.TestLoader().loadTestsFromTestCase(Boundary_Visualization_Test)
+    # unittest.TextTestRunner(verbosity=1).run(b_visualization_test)
+    # hill_climbing_test = unittest.TestLoader().loadTestsFromTestCase(Hill_Climbing_Tests)
+    # unittest.TextTestRunner(verbosity=1).run(hill_climbing_test)
+    rand_hill_climbing_test = unittest.TestLoader().loadTestsFromTestCase(Random_Hill_Climbing_Tests)
+    unittest.TextTestRunner(verbosity=1).run(rand_hill_climbing_test)
