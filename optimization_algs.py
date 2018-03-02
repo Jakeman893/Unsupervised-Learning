@@ -18,7 +18,7 @@ def hill_climbing(eval_funct, start_position, epsilon=0.01, step_size=1, acceler
             acceleration /= 2
     return current_pos, current_score
 
-# TODO: Implement randomized hill climbing
+# Implement randomized hill climbing
 def randomized_hill_climbing(eval_funct, start_position, prob_jump=0.01, iter_lim=1000, epsilon=0.01, step_size=1, acceleration=1.2, bounds=(float("-inf"),float("inf"))):
     current_pos = start_position
     current_score = eval_funct(start_position)
@@ -38,14 +38,26 @@ def randomized_hill_climbing(eval_funct, start_position, prob_jump=0.01, iter_li
             acceleration /= 2
     
     # At end of iterations, check if hill climber was finished
-    if iter_cnt == iter_lim:
-        return hill_climbing(eval_funct, current_pos, epsilon, step_size, acceleration, bounds)
+    # if iter_cnt == iter_lim:
+    #     return hill_climbing(eval_funct, current_pos, epsilon, step_size, acceleration, bounds)
 
     return current_pos, current_score
 
 # TODO: Implement simulated annealing
-def simulated_annealing():
-    pass
+def simulated_annealing(eval_funct, start_position, T = 1.0, min_T = 0.0001, T_decay=0.9, iters_per_decay=100, bounds = (float("-inf"),float("inf"))):
+    current_pos = start_position
+    current_score = eval_funct(start_position)
+    while T > min_T:
+        for i in xrange(0,iters_per_decay):
+            # Choose new random position within bounds
+            new_pos = np.random.uniform(bounds[0], bounds[1])
+            new_score = eval_funct(new_pos)
+            if new_score > current_score \
+            or math.exp((new_score - current_score)/T) > np.random.rand():
+                current_pos = new_pos
+                current_score = new_score
+        T = T * T_decay
+    return current_pos, current_score
 
 # TODO: Implement genetic algorithm
 def genetic():

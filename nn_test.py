@@ -238,6 +238,45 @@ class Random_Hill_Climbing_Tests(unittest.TestCase):
         self.assertTrue(score == 10 or score == 5)
         self.assertTrue(round(pos) == 10 or round(pos) == 25)
 
+from optimization_algs import simulated_annealing
+
+class Simulated_Annealing_Tests(unittest.TestCase):
+    def test_pos_slope(self):
+        arr = range(0,10)
+        eval_funct = lambda x: arr[int(round(abs(x)))]
+        pos, score = simulated_annealing(eval_funct, 0, iters_per_decay=1, bounds = (0, 9))
+        self.assertEquals(score, 9)
+        self.assertAlmostEqual(round(pos), 9)
+
+    def test_neg_slope(self):
+        arr = range(9, -1, -1)
+        eval_funct = lambda x: arr[int(round(abs(x)))]
+        pos, score = simulated_annealing(eval_funct, 9, iters_per_decay=1, bounds = (0, 9))
+        self.assertEquals(score, 9)
+        self.assertAlmostEqual(round(pos), 0)
+
+    # Tests function of form /\, see if we can find peak
+    def test_mountain_from_left(self):
+        arr = range(0,10) + range(10,-1,-1)
+        eval_funct = lambda x: arr[int(round(abs(x)))]
+        pos, score = simulated_annealing(eval_funct, 0, bounds = (0, 20))
+        self.assertEquals(score, 10)
+        self.assertAlmostEqual(round(pos), 10)
+
+    def test_mountain_from_right(self):
+        arr = range(0,10) + range(10,-1,-1)
+        eval_funct = lambda x: arr[int(round(abs(x)))]
+        pos, score = simulated_annealing(eval_funct, 0, bounds = (0, 20))
+        self.assertEquals(score, 10)
+        self.assertEquals(round(pos), 10)
+
+    def test_two_peaks(self):
+        arr = range(0,10) + range(10,-1,-1) + range(1, 6)
+        eval_funct = lambda x: arr[int(round(abs(x)))]
+        pos, score = simulated_annealing(eval_funct, 0, bounds = (0, 25))
+        self.assertEquals(score, 10)
+        self.assertEquals(round(pos), 10)
+
 if __name__ == '__main__':
     # backprop_test = unittest.TestLoader().loadTestsFromTestCase(NN_Backprop_Test)
     # unittest.TextTestRunner(verbosity=1).run(backprop_test)
@@ -245,5 +284,7 @@ if __name__ == '__main__':
     # unittest.TextTestRunner(verbosity=1).run(b_visualization_test)
     # hill_climbing_test = unittest.TestLoader().loadTestsFromTestCase(Hill_Climbing_Tests)
     # unittest.TextTestRunner(verbosity=1).run(hill_climbing_test)
-    rand_hill_climbing_test = unittest.TestLoader().loadTestsFromTestCase(Random_Hill_Climbing_Tests)
-    unittest.TextTestRunner(verbosity=1).run(rand_hill_climbing_test)
+    # rand_hill_climbing_test = unittest.TestLoader().loadTestsFromTestCase(Random_Hill_Climbing_Tests)
+    # unittest.TextTestRunner(verbosity=1).run(rand_hill_climbing_test)
+    sim_annealing_test = unittest.TestLoader().loadTestsFromTestCase(Simulated_Annealing_Tests)
+    unittest.TextTestRunner(verbosity=1).run(sim_annealing_test)
