@@ -1,3 +1,5 @@
+__author__ = "Jacob Logas"
+
 import math
 import numpy as np
 
@@ -5,6 +7,18 @@ class Config:
     # Epsilon for stopping
     epsilon = 0.01
 
+"""
+Standard Hill Climbing
+eval_funt: lambda that takes a position as input and returns a score
+start_position: float indicating where the algorithm will start
+epsilon: the minimum difference between a previous score and the new score
+step_size: The maximum amount the algorithm can move per iteration
+acceleration: Modifies the step size for how much to move
+bounds: The window of the function to consider, defaults to no limit
+Returns:
+current_pos: the location of maximal score found
+current_score: the maximal score found
+"""
 def hill_climbing(eval_funct, start_position, epsilon=0.01, step_size=1, acceleration=1.2, bounds=(float("-inf"),float("inf"))):
     current_pos = start_position
     current_score = eval_funct(start_position)
@@ -18,6 +32,20 @@ def hill_climbing(eval_funct, start_position, epsilon=0.01, step_size=1, acceler
             acceleration /= 2
     return current_pos, current_score
 
+"""
+Randomized Hill Climbing
+eval_funt: lambda that takes a position as input and returns a score
+start_position: float indicating where the algorithm will start
+epsilon: the minimum difference between a previous score and the new score
+step_size: The maximum amount the algorithm can move per iteration
+acceleration: Modifies the step size for how much to move
+bounds: The window of the function to consider, defaults to no limit
+prob_jump: The probability that on any iteration the function will choose a new value
+iter_lim: The total iteration limit for the algorithm to run
+Returns:
+current_pos: the location of maximal score found
+current_score: the maximal score found
+"""
 # Implement randomized hill climbing
 def randomized_hill_climbing(eval_funct, start_position, prob_jump=0.01, iter_lim=1000, epsilon=0.01, step_size=1, acceleration=1.2, bounds=(float("-inf"),float("inf"))):
     current_pos = start_position
@@ -37,12 +65,21 @@ def randomized_hill_climbing(eval_funct, start_position, prob_jump=0.01, iter_li
         if prev_score == current_score and prev_pos == current_pos:
             acceleration /= 2
     
-    # At end of iterations, check if hill climber was finished
-    # if iter_cnt == iter_lim:
-    #     return hill_climbing(eval_funct, current_pos, epsilon, step_size, acceleration, bounds)
-
     return current_pos, current_score
 
+"""
+Simulated Annealing
+eval_funt: lambda that takes a position as input and returns a score
+start_position: float indicating where the algorithm will start
+T: The starting temperature
+min_T: When to stop annealing
+T_decay: The rate of decay of temperature
+iters_per_decay: Number of annealing iterations to perform per temperature decay
+bounds: The window of the function to consider, defaults to no limit
+Returns:
+current_pos: the location of maximal score found
+current_score: the maximal score found
+"""
 # TODO: Implement simulated annealing
 def simulated_annealing(eval_funct, start_position, T = 1.0, min_T = 0.0001, T_decay=0.9, iters_per_decay=100, bounds = (float("-inf"),float("inf"))):
     current_pos = start_position
@@ -60,7 +97,7 @@ def simulated_annealing(eval_funct, start_position, T = 1.0, min_T = 0.0001, T_d
     return current_pos, current_score
 
 # TODO: Implement genetic algorithm
-def genetic():
+def genetic(fit_funct, bit_vect, ):
     pass
 
 # TODO: Implement MIMIC
