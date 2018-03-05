@@ -2,6 +2,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 import numpy as np
+import pandas as pd
 
 def plot_scatterplot_matrix(df, target):
     sns.set(style="ticks")
@@ -32,4 +33,10 @@ def plot_decision_boundary(pred_func, X, y):
     plt.pcolormesh(xx, yy, Z, cmap=plt.cm.Accent)
     plt.scatter(X[:,0], X[:,1], c=y, cmap=plt.cm.jet)
     plt.axis([np.min(X[:, 0])-0.5, np.max(X[:, 0])+0.5, np.min(X[:, 1])-0.5, np.max(X[:, 1])+0.5])
+    plt.show()
+
+def plot_stock_data(df, x, y):
+    plt.figure()
+    df.plot()
+    plt.plot(x,y,'ro')
     plt.show()
